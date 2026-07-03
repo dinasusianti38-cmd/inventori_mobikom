@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Assembly Projek</title>
+    <style>
+        @media print {
+            @page { margin: 1.5cm; }
+            body { margin: 0; }
+            .no-print { display: none !important; }
+        }
+        
+        * { box-sizing: border-box; }
+        body { 
+            font-family: "Segoe UI", Arial, sans-serif; 
+            margin: 0;
+            padding: 20px;
+            font-size: 11px;
+            color: #333;
+            background: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .btn-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        .btn-print:hover { 
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+        
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #4682B4;
+        }
+        .header h1 { 
+            font-size: 26px; 
+            color: #4682B4;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .header h2 { 
+            font-size: 16px; 
+            color: #666; 
+            font-weight: normal;
+            margin: 0 0 12px 0;
+        }
+        .header .date { 
+            font-size: 12px; 
+            color: #999; 
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            color: white;
+        }
+        .summary h3 {
+            font-size: 16px;
+            margin: 0 0 20px 0;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .summary-box {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        .summary-box .number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .summary-box .label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .project {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .project-header {
+            background: linear-gradient(135deg, #4682B4 0%, #5a9bd4 100%);
+            color: white;
+            padding: 20px;
+        }
+        .project-header h3 { 
+            font-size: 18px;
+            margin: 0 0 8px 0;
+        }
+        .project-header .info { 
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+        .project-header .stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .project-header .stat {
+            background: rgba(255,255,255,0.25);
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        table th {
+            background: #f8f9fa;
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 11px;
+        }
+        table tbody tr:hover { 
+            background: #f8f9fa;
+            transition: background 0.2s;
+        }
+        table tbody tr:last-child td { 
+            border-bottom: none; 
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-ok { 
+            background: #d4edda; 
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-low { 
+            background: #fff3cd; 
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .status-out { 
+            background: #f8d7da; 
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .footer {
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+            text-align: right;
+        }
+        .signature {
+            display: inline-block;
+            text-align: center;
+            min-width: 250px;
+        }
+        .signature-line {
+            margin-top: 70px;
+            border-top: 2px solid #333;
+            padding-top: 8px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .no-data h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="btn-print no-print" onclick="window.print()">🖨️ Cetak / Save PDF</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Laporan Assembly Projek</h1>
+            <h2>Sistem Inventory Management</h2>
+            <p class="date">Dicetak pada: 06/02/2026 06:32</p>
+        </div>
+        
+        <div class="summary">
+            <h3>📊 Ringkasan</h3>
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <div class="number">2</div>
+                    <div class="label">Total Projek</div>
+                </div>
+                <div class="summary-box">
+                    <div class="number">3</div>
+                    <div class="label">Total Assembly</div>
+                </div>
+                <div class="summary-box">
+                    <div class="number">41</div>
+                    <div class="label">Total Unit Diproduksi</div>
+                </div>
+            </div>
+        </div>
+        <div class="project">
+            <div class="project-header">
+                <h3>🔧 lora</h3>
+                <div class="info">Kode: 54321</div>
+                <div class="stats">
+                    <span class="stat">📦 Assembly: 1x</span>
+                    <span class="stat">✅ Produksi: 30 unit</span>
+                    <span class="stat">🔩 Material: 2 jenis</span>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%; text-align: center;">No</th>
+                        <th style="width: 18%;">Kode Material</th>
+                        <th style="width: 30%;">Nama Material</th>
+                        <th style="width: 13%; text-align: center;">Qty Dibutuhkan</th>
+                        <th style="width: 13%; text-align: center;">Stok Tersedia</th>
+                        <th style="width: 10%; text-align: center;">Selisih</th>
+                        <th style="width: 11%; text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody><tr>
+                        <td style="text-align: center; font-weight: bold;">1</td>
+                        <td><strong>1234</strong></td>
+                        <td>batery lora</td>
+                        <td style="text-align: center;"><strong>1</strong></td>
+                        <td style="text-align: center;">18</td>
+                        <td style="text-align: center; color: #28a745; font-weight: bold;">+17</td>
+                        <td style="text-align: center;"><span class="status status-ok">✓ Cukup</span></td>
+                    </tr><tr>
+                        <td style="text-align: center; font-weight: bold;">2</td>
+                        <td><strong>1234</strong></td>
+                        <td>batery lora</td>
+                        <td style="text-align: center;"><strong>1</strong></td>
+                        <td style="text-align: center;">-2</td>
+                        <td style="text-align: center; color: #dc3545; font-weight: bold;">-3</td>
+                        <td style="text-align: center;"><span class="status status-out">✗ Habis</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="project">
+            <div class="project-header">
+                <h3>🔧 hehe tes lu</h3>
+                <div class="info">Kode: 7654</div>
+                <div class="stats">
+                    <span class="stat">📦 Assembly: 2x</span>
+                    <span class="stat">✅ Produksi: 11 unit</span>
+                    <span class="stat">🔩 Material: 4 jenis</span>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%; text-align: center;">No</th>
+                        <th style="width: 18%;">Kode Material</th>
+                        <th style="width: 30%;">Nama Material</th>
+                        <th style="width: 13%; text-align: center;">Qty Dibutuhkan</th>
+                        <th style="width: 13%; text-align: center;">Stok Tersedia</th>
+                        <th style="width: 10%; text-align: center;">Selisih</th>
+                        <th style="width: 11%; text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody><tr>
+                        <td style="text-align: center; font-weight: bold;">1</td>
+                        <td><strong>6544</strong></td>
+                        <td>antena</td>
+                        <td style="text-align: center;"><strong>1</strong></td>
+                        <td style="text-align: center;">-7</td>
+                        <td style="text-align: center; color: #dc3545; font-weight: bold;">-8</td>
+                        <td style="text-align: center;"><span class="status status-out">✗ Habis</span></td>
+                    </tr><tr>
+                        <td style="text-align: center; font-weight: bold;">2</td>
+                        <td><strong>6544</strong></td>
+                        <td>antena</td>
+                        <td style="text-align: center;"><strong>1</strong></td>
+                        <td style="text-align: center;">-2</td>
+                        <td style="text-align: center; color: #dc3545; font-weight: bold;">-3</td>
+                        <td style="text-align: center;"><span class="status status-out">✗ Habis</span></td>
+                    </tr><tr>
+                        <td style="text-align: center; font-weight: bold;">3</td>
+                        <td><strong>1234</strong></td>
+                        <td>batery lora</td>
+                        <td style="text-align: center;"><strong>1</strong></td>
+                        <td style="text-align: center;">18</td>
+                        <td style="text-align: center; color: #28a745; font-weight: bold;">+17</td>
+                        <td style="text-align: center;"><span class="status status-ok">✓ Cukup</span></td>
+                    </tr><tr>
+                        <td style="text-align: center; font-weight: bold;">4</td>
+                        <td><strong>1234</strong></td>
+                        <td>batery lora</td>
+                        <td style="text-align: center;"><strong>1</strong></td>
+                        <td style="text-align: center;">-2</td>
+                        <td style="text-align: center; color: #dc3545; font-weight: bold;">-3</td>
+                        <td style="text-align: center;"><span class="status status-out">✗ Habis</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <div class="signature">
+                <div style="margin-bottom: 10px;">Mengetahui,</div>
+                <div class="signature-line">Administrator</div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        // Optional: Auto print dialog
+        // window.addEventListener("load", function() {
+        //     setTimeout(function() {
+        //         window.print();
+        //     }, 500);
+        // });
+    </script>
+</body>
+</html>
